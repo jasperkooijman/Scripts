@@ -1,0 +1,22 @@
+def shadowProjects = ext.find('shadowProjects')
+
+if (shadowProjects == null) {
+    shadowProjects = subprojects
+}
+
+configure(shadowProjects) {
+    apply plugin: 'java-library'
+    apply plugin: 'com.gradleup.shadow'
+
+    shadowJar {
+        archiveClassifier.set('')
+        archiveAppendix.set("${project.name}")
+        archiveBaseName.set("${rootProject.name}")
+
+        mergeServiceFiles()
+    }
+
+    build {
+        dependsOn shadowJar
+    }
+}

@@ -1,0 +1,26 @@
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
+
+    publishing {
+        publications {
+            if (!publications.findByName('mavenJava')) {
+                mavenJava(MavenPublication) {
+                    from components.java
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                name = 'GitHubPackages'
+                url = uri("https://maven.pkg.github.com/jasperkooijman/${rootProject.name}")
+
+                credentials {
+                    username = project.findProperty('gpr.user') ?: System.getenv('GITHUB_ACTOR')
+                    password = project.findProperty('gpr.key') ?: System.getenv('GITHUB_TOKEN')
+                }
+            }
+        }
+    }
+}
